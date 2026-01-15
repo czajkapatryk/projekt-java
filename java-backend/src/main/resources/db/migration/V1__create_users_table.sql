@@ -32,16 +32,34 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='updated_at') THEN
         ALTER TABLE users ADD COLUMN updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
     END IF;
+    
+    IF EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name='users') THEN
+        COMMENT ON TABLE users IS 'Tabela przechowująca dane użytkowników systemu';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='id') THEN
+        COMMENT ON COLUMN users.id IS 'Unikalny identyfikator użytkownika';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='email') THEN
+        COMMENT ON COLUMN users.email IS 'Adres email użytkownika (unikalny)';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password') THEN
+        COMMENT ON COLUMN users.password IS 'Zahashowane hasło użytkownika (BCrypt)';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='first_name') THEN
+        COMMENT ON COLUMN users.first_name IS 'Imię użytkownika';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='last_name') THEN
+        COMMENT ON COLUMN users.last_name IS 'Nazwisko użytkownika';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='role') THEN
+        COMMENT ON COLUMN users.role IS 'Rola użytkownika w systemie (USER, ADMIN)';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='created_at') THEN
+        COMMENT ON COLUMN users.created_at IS 'Data utworzenia konta';
+    END IF;
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='updated_at') THEN
+        COMMENT ON COLUMN users.updated_at IS 'Data ostatniej aktualizacji';
+    END IF;
 END $$;
 
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
-
-COMMENT ON TABLE users IS 'Tabela przechowująca dane użytkowników systemu';
-COMMENT ON COLUMN users.id IS 'Unikalny identyfikator użytkownika';
-COMMENT ON COLUMN users.email IS 'Adres email użytkownika (unikalny)';
-COMMENT ON COLUMN users.password IS 'Zahashowane hasło użytkownika (BCrypt)';
-COMMENT ON COLUMN users.first_name IS 'Imię użytkownika';
-COMMENT ON COLUMN users.last_name IS 'Nazwisko użytkownika';
-COMMENT ON COLUMN users.role IS 'Rola użytkownika w systemie (USER, ADMIN)';
-COMMENT ON COLUMN users.created_at IS 'Data utworzenia konta';
-COMMENT ON COLUMN users.updated_at IS 'Data ostatniej aktualizacji';
