@@ -36,22 +36,6 @@ export function LoginForm({ onSwitchToRegister, onSuccess }: LoginFormProps) {
     }
   }
 
-  const handleDemoLogin = async () => {
-    setEmail("jan.kowalski@example.com")
-    setPassword("password123")
-    setError("")
-    setIsLoading(true)
-
-    try {
-      await login("jan.kowalski@example.com", "password123")
-      onSuccess()
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Wystąpił błąd podczas logowania")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   return (
     <Card className="w-full max-w-md border-border/50 bg-card/50 backdrop-blur-sm">
       <img src="ben-10.jpg" alt="Ben 10" className="w-full h-full object-cover" />
@@ -61,8 +45,6 @@ export function LoginForm({ onSwitchToRegister, onSuccess }: LoginFormProps) {
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
-          <div className="flex items-start gap-2 rounded-lg bg-green-500/10 p-3 text-sm text-green-700 dark:text-green-300">
-
           {error && (
             <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
               <AlertCircle className="h-4 w-4" />
