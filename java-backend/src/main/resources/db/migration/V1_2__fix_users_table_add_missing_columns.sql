@@ -4,10 +4,17 @@
 
 DO $$
 BEGIN
-    -- Sprawdź czy istnieje password_hash (stara nazwa z v0) i zmień na password
+    -- Obsługa kolumny password/password_hash
+    -- Sprawdź czy istnieje password_hash
     IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password_hash') THEN
-        -- Zmień nazwę kolumny z password_hash na password
-        ALTER TABLE users RENAME COLUMN password_hash TO password;
+        -- Sprawdź czy password już istnieje
+        IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password') THEN
+            -- Oba istnieją - usuń password_hash (używamy password)
+            ALTER TABLE users DROP COLUMN password_hash;
+        ELSE
+            -- Tylko password_hash istnieje - zmień nazwę na password
+            ALTER TABLE users RENAME COLUMN password_hash TO password;
+        END IF;
     END IF;
     
     -- Dodaj kolumnę password jeśli nie istnieje (ani password, ani password_hash)
