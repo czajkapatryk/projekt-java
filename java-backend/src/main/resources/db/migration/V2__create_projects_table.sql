@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS projects (
 );
 
 -- Indeksy
-CREATE INDEX idx_projects_owner_id ON projects(owner_id);
-CREATE INDEX idx_projects_name ON projects(name);
+CREATE INDEX IF NOT EXISTS idx_projects_owner_id ON projects(owner_id);
+CREATE INDEX IF NOT EXISTS idx_projects_name ON projects(name);
 
 -- Komentarze
 COMMENT ON TABLE projects IS 'Tabela przechowująca projekty';

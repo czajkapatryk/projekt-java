@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Indeks na email dla szybszego wyszukiwania
-CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
 -- Komentarze do tabeli i kolumn
 COMMENT ON TABLE users IS 'Tabela przechowująca dane użytkowników systemu';

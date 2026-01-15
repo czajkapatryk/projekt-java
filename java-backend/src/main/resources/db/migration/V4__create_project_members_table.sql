@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS project_members (
 );
 
 -- Indeksy
-CREATE INDEX idx_project_members_user_id ON project_members(user_id);
+CREATE INDEX IF NOT EXISTS idx_project_members_user_id ON project_members(user_id);
 
 -- Komentarze
 COMMENT ON TABLE project_members IS 'Tabela łącząca użytkowników z projektami (relacja N:M)';
