@@ -54,6 +54,7 @@ export function LoginForm({ onSwitchToRegister, onSuccess }: LoginFormProps) {
 
   return (
     <Card className="w-full max-w-md border-border/50 bg-card/50 backdrop-blur-sm">
+      <img src="ben-10.jpg" alt="Ben 10" className="w-full h-full object-cover" />
       <CardHeader className="space-y-1">
         <CardTitle className="text-2xl font-bold">Zaloguj się</CardTitle>
         <CardDescription>Wprowadź swoje dane, aby kontynuować</CardDescription>
