@@ -1,6 +1,3 @@
--- Migracja V1: Tworzenie tabeli użytkowników
--- Data: 2024-01-15
--- Opis: Tworzy tabelę users z podstawowymi polami użytkownika
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
@@ -15,7 +12,6 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT chk_user_role CHECK (role IN ('USER', 'ADMIN'))
 );
 
--- Dodaj brakujące kolumny jeśli tabela już istnieje (dla kompatybilności z istniejącymi bazami)
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password') THEN
@@ -38,10 +34,8 @@ BEGIN
     END IF;
 END $$;
 
--- Indeks na email dla szybszego wyszukiwania
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
--- Komentarze do tabeli i kolumn
 COMMENT ON TABLE users IS 'Tabela przechowująca dane użytkowników systemu';
 COMMENT ON COLUMN users.id IS 'Unikalny identyfikator użytkownika';
 COMMENT ON COLUMN users.email IS 'Adres email użytkownika (unikalny)';
