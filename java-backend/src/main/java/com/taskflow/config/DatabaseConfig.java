@@ -1,11 +1,12 @@
 package com.taskflow.config;
 
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import javax.sql.DataSource;
 import java.net.URI;
 
 @Configuration
@@ -13,11 +14,9 @@ public class DatabaseConfig {
 
     @Bean
     @Primary
-    @ConfigurationProperties("spring.datasource")
-    public DataSourceProperties dataSourceProperties() {
-        DataSourceProperties properties = new DataSourceProperties();
-        
+    public DataSource dataSource() {
         String databaseUrl = System.getenv("DATABASE_URL");
+        
         if (databaseUrl != null && !databaseUrl.isEmpty()) {
             try {
                 URI dbUri = new URI(databaseUrl);
@@ -34,14 +33,25 @@ public class DatabaseConfig {
                     jdbcUrl += "?" + query;
                 }
                 
-                properties.setUrl(jdbcUrl);
-                properties.setUsername(username);
-                properties.setPassword(password);
+                HikariConfig config = new HikariConfig();
+                config.setJdbcUrl(jdbcUrl);
+                config.setUsername(username);
+                config.setPassword(password);
+                config.setDriverClassName("org.postgresql.Driver");
+                config.setMaximumPoolSize(10);
+                config.setMinimumIdle(2);
+                config.setConnectionTimeout(30000);
+                config.setIdleTimeout(600000);
+                config.setMaxLifetime(1800000);
+                
+                return new HikariDataSource(config);
             } catch (Exception e) {
                 System.err.println("Error parsing DATABASE_URL: " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException("Failed to configure DataSource from DATABASE_URL", e);
             }
         }
         
-        return properties;
+        throw new RuntimeException("DATABASE_URL environment variable is not set");
     }
 }
