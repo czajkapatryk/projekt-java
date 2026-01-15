@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, Loader2, Database } from "lucide-react"
+import { AlertCircle, Loader2 } from "lucide-react"
 
 interface LoginFormProps {
   onSwitchToRegister: () => void
@@ -61,12 +61,6 @@ export function LoginForm({ onSwitchToRegister, onSuccess }: LoginFormProps) {
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
           <div className="flex items-start gap-2 rounded-lg bg-green-500/10 p-3 text-sm text-green-700 dark:text-green-300">
-            <Database className="h-4 w-4 mt-0.5 shrink-0" />
-            <div>
-              <p className="font-medium">Baza danych PostgreSQL</p>
-              <p className="text-xs opacity-80">Aplikacja połączona z prawdziwą bazą danych Neon PostgreSQL.</p>
-            </div>
-          </div>
 
           {error && (
             <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
