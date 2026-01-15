@@ -115,4 +115,13 @@ public class ProjectService {
             throw new UnauthorizedException("Nie masz uprawnień do tego projektu");
         }
     }
+
+    /**
+     * Pobiera liczbę projektów użytkownika.
+     * @param userId ID użytkownika
+     * @return Liczba projektów
+     */
+    public long getProjectsCountByUser(Long userId) {
+        return projectRepository.countByOwnerId(userId);
+    }
 }

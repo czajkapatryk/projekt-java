@@ -11,9 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Kontroler REST dla operacji autentykacji.
- */
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -21,20 +18,15 @@ public class AuthController {
 
     private final AuthService authService;
 
-    /**
-     * Rejestracja nowego użytkownika.
-     * POST /api/v1/auth/register
-     */
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
-        UserResponse response = authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest request) {
+        UserResponse userResponse = authService.register(request);
+        AuthResponse authResponse = authService.login(
+            new LoginRequest(request.getEmail(), request.getPassword())
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(authResponse);
     }
 
-    /**
-     * Logowanie użytkownika.
-     * POST /api/v1/auth/login
-     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.login(request);

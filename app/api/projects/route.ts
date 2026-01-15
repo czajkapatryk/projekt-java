@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { sql } from "@/lib/db"
+
+const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL || "http://localhost:8080"
 
 // GET all projects
 export async function GET(request: NextRequest) {
@@ -9,23 +10,42 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Brak autoryzacji" }, { status: 401 })
     }
 
-    const token = authHeader.replace("Bearer ", "")
-    const userId = Buffer.from(token, "base64").toString().split(":")[0]
+    const response = await fetch(`${JAVA_BACKEND_URL}/api/v1/projects`, {
+      method: "GET",
+      headers: {
+        "Authorization": authHeader,
+        "Content-Type": "application/json",
+      },
+    })
 
-    const projects = await sql`
-      SELECT p.*, u.first_name || ' ' || u.last_name as owner_name,
-             (SELECT COUNT(*) FROM tasks WHERE project_id = p.id) as task_count
-      FROM projects p
-      JOIN users u ON p.owner_id = u.id
-      WHERE p.owner_id = ${userId}
-         OR p.id IN (SELECT project_id FROM project_members WHERE user_id = ${userId})
-      ORDER BY p.created_at DESC
-    `
+    const data = await response.json()
 
-    return NextResponse.json(projects)
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status })
+    }
+
+    // Map Java backend response to frontend format
+    // Java returns Page<ProjectResponse> with content array
+    // Frontend expects array of projects
+    const projects = data.content || data
+    const mappedProjects = Array.isArray(projects) ? projects.map((p: any) => ({
+      id: String(p.id),
+      name: p.name,
+      description: p.description,
+      owner_id: String(p.owner?.id || ""),
+      owner_name: p.owner ? `${p.owner.firstName} ${p.owner.lastName}` : undefined,
+      task_count: p.taskCount || 0,
+      created_at: p.createdAt,
+      updated_at: p.updatedAt,
+    })) : []
+
+    return NextResponse.json(mappedProjects)
   } catch (error) {
-    console.error("Get projects error:", error)
-    return NextResponse.json({ error: "Wystąpił błąd serwera" }, { status: 500 })
+    console.error("Get projects proxy error:", error)
+    return NextResponse.json(
+      { error: "Nie można połączyć się z serwerem" },
+      { status: 503 }
+    )
   }
 }
 
@@ -37,24 +57,41 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Brak autoryzacji" }, { status: 401 })
     }
 
-    const token = authHeader.replace("Bearer ", "")
-    const userId = Buffer.from(token, "base64").toString().split(":")[0]
+    const body = await request.json()
 
-    const { name, description } = await request.json()
+    const response = await fetch(`${JAVA_BACKEND_URL}/api/v1/projects`, {
+      method: "POST",
+      headers: {
+        "Authorization": authHeader,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
 
-    if (!name) {
-      return NextResponse.json({ error: "Nazwa projektu jest wymagana" }, { status: 400 })
+    const data = await response.json()
+
+    if (!response.ok) {
+      return NextResponse.json(data, { status: response.status })
     }
 
-    const projects = await sql`
-      INSERT INTO projects (name, description, owner_id)
-      VALUES (${name}, ${description || null}, ${userId})
-      RETURNING *
-    `
+    // Map Java backend response to frontend format
+    const mappedProject = {
+      id: String(data.id),
+      name: data.name,
+      description: data.description,
+      owner_id: String(data.owner?.id || ""),
+      owner_name: data.owner ? `${data.owner.firstName} ${data.owner.lastName}` : undefined,
+      task_count: data.taskCount || 0,
+      created_at: data.createdAt,
+      updated_at: data.updatedAt,
+    }
 
-    return NextResponse.json(projects[0], { status: 201 })
+    return NextResponse.json(mappedProject, { status: response.status })
   } catch (error) {
-    console.error("Create project error:", error)
-    return NextResponse.json({ error: "Wystąpił błąd serwera" }, { status: 500 })
+    console.error("Create project proxy error:", error)
+    return NextResponse.json(
+      { error: "Nie można połączyć się z serwerem" },
+      { status: 503 }
+    )
   }
 }

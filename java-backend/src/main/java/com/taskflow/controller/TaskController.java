@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Kontroler REST dla operacji na zadaniach.
- */
 @RestController
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
@@ -27,10 +24,6 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    /**
-     * Pobiera zadania z filtrami.
-     * GET /api/v1/tasks
-     */
     @GetMapping
     public ResponseEntity<Page<TaskResponse>> getTasks(
             @RequestParam(required = false) Long projectId,
@@ -42,50 +35,30 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Pobiera zadanie po ID.
-     * GET /api/v1/tasks/{id}
-     */
     @GetMapping("/{id}")
     public ResponseEntity<TaskResponse> getTaskById(@PathVariable Long id) {
         TaskResponse response = taskService.getTaskById(id);
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Pobiera zadania w projekcie.
-     * GET /api/v1/tasks/project/{projectId}
-     */
     @GetMapping("/project/{projectId}")
     public ResponseEntity<List<TaskResponse>> getTasksByProject(@PathVariable Long projectId) {
         List<TaskResponse> response = taskService.getTasksByProject(projectId);
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Pobiera zadania przypisane do użytkownika.
-     * GET /api/v1/tasks/assignee/{userId}
-     */
     @GetMapping("/assignee/{userId}")
     public ResponseEntity<List<TaskResponse>> getTasksByAssignee(@PathVariable Long userId) {
         List<TaskResponse> response = taskService.getTasksByAssignee(userId);
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Tworzy nowe zadanie.
-     * POST /api/v1/tasks
-     */
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest request) {
         TaskResponse response = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Aktualizuje zadanie.
-     * PUT /api/v1/tasks/{id}
-     */
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponse> updateTask(
             @PathVariable Long id,
@@ -94,10 +67,6 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Zmienia status zadania.
-     * PATCH /api/v1/tasks/{id}/status
-     */
     @PatchMapping("/{id}/status")
     public ResponseEntity<TaskResponse> updateTaskStatus(
             @PathVariable Long id,
@@ -106,10 +75,6 @@ public class TaskController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Usuwa zadanie.
-     * DELETE /api/v1/tasks/{id}
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);

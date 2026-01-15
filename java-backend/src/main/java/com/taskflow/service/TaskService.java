@@ -155,4 +155,23 @@ public class TaskService {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Zadanie", "id", id));
     }
+
+    /**
+     * Pobiera całkowitą liczbę zadań użytkownika (we wszystkich jego projektach).
+     * @param userId ID użytkownika
+     * @return Liczba zadań
+     */
+    public long getTotalTasksCountByUser(Long userId) {
+        return taskRepository.countByProjectOwnerId(userId);
+    }
+
+    /**
+     * Pobiera liczbę zadań użytkownika o określonym statusie.
+     * @param userId ID użytkownika
+     * @param status Status zadań
+     * @return Liczba zadań
+     */
+    public long getTasksCountByStatusAndUser(Long userId, TaskStatus status) {
+        return taskRepository.countByProjectOwnerIdAndStatus(userId, status);
+    }
 }

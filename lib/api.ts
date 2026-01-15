@@ -1,7 +1,5 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api/v1"
 
-const DEMO_MODE = false // Set to false when Java backend is running
-
 export interface User {
   id: string
   email: string

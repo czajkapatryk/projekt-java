@@ -15,9 +15,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Kontroler REST dla operacji na projektach.
- */
 @RestController
 @RequestMapping("/api/v1/projects")
 @RequiredArgsConstructor
@@ -26,10 +23,6 @@ public class ProjectController {
     private final ProjectService projectService;
     private final UserService userService;
 
-    /**
-     * Pobiera projekty użytkownika.
-     * GET /api/v1/projects
-     */
     @GetMapping
     public ResponseEntity<Page<ProjectResponse>> getProjects(
             @AuthenticationPrincipal UserDetails userDetails,
@@ -39,20 +32,12 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Pobiera projekt po ID.
-     * GET /api/v1/projects/{id}
-     */
     @GetMapping("/{id}")
     public ResponseEntity<ProjectResponse> getProjectById(@PathVariable Long id) {
         ProjectResponse response = projectService.getProjectById(id);
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Tworzy nowy projekt.
-     * POST /api/v1/projects
-     */
     @PostMapping
     public ResponseEntity<ProjectResponse> createProject(
             @Valid @RequestBody ProjectRequest request,
@@ -62,10 +47,6 @@ public class ProjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * Aktualizuje projekt.
-     * PUT /api/v1/projects/{id}
-     */
     @PutMapping("/{id}")
     public ResponseEntity<ProjectResponse> updateProject(
             @PathVariable Long id,
@@ -76,10 +57,6 @@ public class ProjectController {
         return ResponseEntity.ok(response);
     }
 
-    /**
-     * Usuwa projekt.
-     * DELETE /api/v1/projects/{id}
-     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(
             @PathVariable Long id,

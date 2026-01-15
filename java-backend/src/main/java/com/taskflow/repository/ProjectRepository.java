@@ -33,4 +33,11 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
      * @return Lista projektów
      */
     List<Project> findByOwnerId(Long ownerId);
+
+    /**
+     * Zlicza projekty użytkownika.
+     * @param ownerId ID właściciela
+     * @return Liczba projektów
+     */
+    long countByOwnerId(Long ownerId);
 }

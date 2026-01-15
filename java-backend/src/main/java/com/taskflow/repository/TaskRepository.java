@@ -60,4 +60,21 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
      * @return Liczba zadań
      */
     long countByProjectIdAndStatus(Long projectId, TaskStatus status);
+
+    /**
+     * Zlicza zadania we wszystkich projektach użytkownika.
+     * @param ownerId ID właściciela projektów
+     * @return Liczba zadań
+     */
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.project.owner.id = :ownerId")
+    long countByProjectOwnerId(@Param("ownerId") Long ownerId);
+
+    /**
+     * Zlicza zadania we wszystkich projektach użytkownika według statusu.
+     * @param ownerId ID właściciela projektów
+     * @param status Status zadań
+     * @return Liczba zadań
+     */
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.project.owner.id = :ownerId AND t.status = :status")
+    long countByProjectOwnerIdAndStatus(@Param("ownerId") Long ownerId, @Param("status") TaskStatus status);
 }

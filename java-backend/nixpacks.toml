@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = { maven = "3.9.6", jdk = "17" }
+
+[phases.install]
+cmds = ["cd java-backend && mvn clean install -DskipTests"]
+
+[start]
+cmd = "cd java-backend && java -jar target/taskflow-backend-1.0.0.jar"
