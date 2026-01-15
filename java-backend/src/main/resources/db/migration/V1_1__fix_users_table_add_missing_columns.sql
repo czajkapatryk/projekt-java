@@ -4,7 +4,13 @@
 
 DO $$
 BEGIN
-    -- Dodaj kolumnę password jeśli nie istnieje
+    -- Sprawdź czy istnieje password_hash (stara nazwa z v0) i zmień na password
+    IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password_hash') THEN
+        -- Zmień nazwę kolumny z password_hash na password
+        ALTER TABLE users RENAME COLUMN password_hash TO password;
+    END IF;
+    
+    -- Dodaj kolumnę password jeśli nie istnieje (ani password, ani password_hash)
     IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='password') THEN
         ALTER TABLE users ADD COLUMN password VARCHAR(255);
         -- Ustaw domyślną wartość dla istniejących rekordów
