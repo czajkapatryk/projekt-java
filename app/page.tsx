@@ -134,6 +134,7 @@ function AppContent() {
             return {
               ...task,
               project: { id: project.id, name: project.name },
+              dueDate: task.due_date || null, // Map due_date to dueDate for TasksView
               assignee: task.assignee_name
                 ? {
                     id: task.assignee_id || "",
@@ -148,6 +149,7 @@ function AppContent() {
             return {
               ...task,
               project: { id: task.project_id, name: "Nieznany projekt" },
+              dueDate: task.due_date || null,
               assignee: null,
               overdue: false,
             }
