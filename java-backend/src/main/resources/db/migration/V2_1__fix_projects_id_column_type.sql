@@ -18,11 +18,18 @@ BEGIN
         -- Znajdź nazwę sekwencji dla kolumny id
         SELECT pg_get_serial_sequence('projects', 'id') INTO seq_name;
         
-        -- Jeśli istnieje sekwencja, usuń ją (będzie utworzona ponownie)
+        -- Jeśli istnieje sekwencja, zapisz jej aktualną wartość i usuń zależności
         IF seq_name IS NOT NULL THEN
-            -- Pobierz aktualną wartość sekwencji
+            -- Pobierz aktualną wartość sekwencji przed zmianą
             EXECUTE format('SELECT setval(%L, (SELECT COALESCE(MAX(id), 1) FROM projects))', seq_name);
-            DROP SEQUENCE IF EXISTS projects_id_seq;
+        END IF;
+        
+        -- Usuń domyślną wartość z kolumny (aby móc usunąć sekwencję)
+        ALTER TABLE projects ALTER COLUMN id DROP DEFAULT;
+        
+        -- Usuń starą sekwencję jeśli istnieje
+        IF seq_name IS NOT NULL THEN
+            EXECUTE format('DROP SEQUENCE IF EXISTS %I CASCADE', seq_name);
         END IF;
         
         -- Zmień typ kolumny na BIGINT
