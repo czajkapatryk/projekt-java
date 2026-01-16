@@ -63,6 +63,43 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
     const body = await request.json()
 
+    // If only status is being updated, use PATCH endpoint
+    const bodyKeys = Object.keys(body)
+    if (bodyKeys.length === 1 && bodyKeys[0] === "status") {
+      const response = await fetch(`${JAVA_BACKEND_URL}/api/v1/tasks/${id}/status`, {
+        method: "PATCH",
+        headers: {
+          "Authorization": authHeader,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: body.status }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        return NextResponse.json(data, { status: response.status })
+      }
+
+      // Map Java backend response to frontend format
+      const mappedTask = {
+        id: String(data.id),
+        title: data.title,
+        description: data.description,
+        status: data.status,
+        priority: data.priority,
+        project_id: String(data.project?.id || ""),
+        assignee_id: data.assignee ? String(data.assignee.id) : null,
+        assignee_name: data.assignee ? `${data.assignee.firstName} ${data.assignee.lastName}` : null,
+        due_date: data.dueDate || null,
+        created_at: data.createdAt,
+        updated_at: data.updatedAt,
+      }
+
+      return NextResponse.json(mappedTask)
+    }
+
+    // Otherwise, use PUT endpoint for full update
     const response = await fetch(`${JAVA_BACKEND_URL}/api/v1/tasks/${id}`, {
       method: "PUT",
       headers: {
