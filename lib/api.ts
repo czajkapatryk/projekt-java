@@ -196,6 +196,14 @@ class ApiClient {
     return response.json()
   }
 
+  async getMyTasks(userId: string): Promise<Task[]> {
+    const response = await fetch(`/api/tasks/assignee/${userId}`, {
+      headers: this.getHeaders(),
+    })
+    if (!response.ok) throw new Error("Błąd pobierania zadań")
+    return response.json()
+  }
+
   async getStats(): Promise<{
     projects: number
     totalTasks: number

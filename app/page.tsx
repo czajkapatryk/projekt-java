@@ -9,6 +9,7 @@ import { Sidebar } from "@/components/sidebar"
 import { DashboardView } from "@/components/dashboard-view"
 import { ProjectsView } from "@/components/projects-view"
 import { ProjectView } from "@/components/project-view"
+import { TasksView } from "@/components/tasks-view"
 import { ProjectDialog } from "@/components/project-dialog"
 import { TaskDialog } from "@/components/task-dialog"
 import { DeleteDialog } from "@/components/delete-dialog"
@@ -33,6 +34,7 @@ function AppContent() {
   const [allTasks, setAllTasks] = useState<TaskWithProject[]>([])
   const [selectedProject, setSelectedProject] = useState<ProjectWithStats | null>(null)
   const [projectTasks, setProjectTasks] = useState<TaskWithProject[]>([])
+  const [myTasks, setMyTasks] = useState<TaskWithProject[]>([])
   const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
@@ -60,6 +62,13 @@ function AppContent() {
       fetchProjectTasks(selectedProject.id)
     }
   }, [selectedProject])
+
+  // Fetch my tasks when tasks view is active
+  useEffect(() => {
+    if (activeView === "tasks" && user && token) {
+      fetchMyTasks()
+    }
+  }, [activeView, user, token])
 
   const fetchData = async () => {
     setIsLoading(true)
@@ -110,6 +119,44 @@ function AppContent() {
       console.error("Error fetching data:", error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const fetchMyTasks = async () => {
+    if (!user?.id) return
+    try {
+      const tasks = await api.getMyTasks(user.id)
+      // Fetch project info for each task
+      const tasksWithProjects: TaskWithProject[] = await Promise.all(
+        tasks.map(async (task) => {
+          try {
+            const project = await api.getProject(task.project_id)
+            return {
+              ...task,
+              project: { id: project.id, name: project.name },
+              assignee: task.assignee_name
+                ? {
+                    id: task.assignee_id || "",
+                    firstName: task.assignee_name.split(" ")[0],
+                    lastName: task.assignee_name.split(" ")[1] || "",
+                  }
+                : null,
+              overdue: task.due_date ? new Date(task.due_date) < new Date() && task.status !== "DONE" : false,
+            }
+          } catch (error) {
+            console.error(`Error fetching project for task ${task.id}:`, error)
+            return {
+              ...task,
+              project: { id: task.project_id, name: "Nieznany projekt" },
+              assignee: null,
+              overdue: false,
+            }
+          }
+        })
+      )
+      setMyTasks(tasksWithProjects)
+    } catch (error) {
+      console.error("Error fetching my tasks:", error)
     }
   }
 
@@ -279,6 +326,12 @@ function AppContent() {
             onSelectProject={(project) => setSelectedProject(project as any)}
             onEditProject={handleEditProject as any}
             onDeleteProject={handleDeleteProject as any}
+          />
+        ) : activeView === "tasks" ? (
+          <TasksView
+            tasks={myTasks as any}
+            onEditTask={handleEditTask as any}
+            onDeleteTask={handleDeleteTask as any}
           />
         ) : null}
       </main>
