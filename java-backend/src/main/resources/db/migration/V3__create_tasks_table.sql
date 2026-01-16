@@ -1,6 +1,3 @@
--- Migracja V3: Tworzenie tabeli zadań
--- Data: 2024-01-15
--- Opis: Tworzy tabelę tasks z relacjami do projektu i użytkownika
 
 CREATE TABLE IF NOT EXISTS tasks (
     id BIGSERIAL PRIMARY KEY,
@@ -22,20 +19,9 @@ CREATE TABLE IF NOT EXISTS tasks (
     CONSTRAINT chk_task_priority CHECK (priority IN ('LOW', 'MEDIUM', 'HIGH', 'URGENT'))
 );
 
--- Indeksy
 CREATE INDEX IF NOT EXISTS idx_tasks_project_id ON tasks(project_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_assignee_id ON tasks(assignee_id);
 CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
 CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority);
 CREATE INDEX IF NOT EXISTS idx_tasks_due_date ON tasks(due_date);
 
--- Komentarze
-COMMENT ON TABLE tasks IS 'Tabela przechowująca zadania w projektach';
-COMMENT ON COLUMN tasks.id IS 'Unikalny identyfikator zadania';
-COMMENT ON COLUMN tasks.title IS 'Tytuł zadania';
-COMMENT ON COLUMN tasks.description IS 'Szczegółowy opis zadania';
-COMMENT ON COLUMN tasks.status IS 'Status zadania (TODO, IN_PROGRESS, IN_REVIEW, DONE)';
-COMMENT ON COLUMN tasks.priority IS 'Priorytet zadania (LOW, MEDIUM, HIGH, URGENT)';
-COMMENT ON COLUMN tasks.due_date IS 'Termin wykonania zadania';
-COMMENT ON COLUMN tasks.project_id IS 'ID projektu, do którego należy zadanie';
-COMMENT ON COLUMN tasks.assignee_id IS 'ID użytkownika przypisanego do zadania';

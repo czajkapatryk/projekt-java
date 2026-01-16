@@ -1,6 +1,3 @@
--- Migracja V4: Tworzenie tabeli członków projektu
--- Data: 2024-01-15
--- Opis: Tworzy tabelę project_members dla relacji N:M między użytkownikami a projektami
 
 CREATE TABLE IF NOT EXISTS project_members (
     project_id BIGINT NOT NULL,
@@ -16,12 +13,5 @@ CREATE TABLE IF NOT EXISTS project_members (
     CONSTRAINT chk_pm_role CHECK (role IN ('OWNER', 'ADMIN', 'MEMBER', 'VIEWER'))
 );
 
--- Indeksy
 CREATE INDEX IF NOT EXISTS idx_project_members_user_id ON project_members(user_id);
-
--- Komentarze
-COMMENT ON TABLE project_members IS 'Tabela łącząca użytkowników z projektami (relacja N:M)';
-COMMENT ON COLUMN project_members.project_id IS 'ID projektu';
-COMMENT ON COLUMN project_members.user_id IS 'ID użytkownika będącego członkiem projektu';
-COMMENT ON COLUMN project_members.role IS 'Rola użytkownika w projekcie (OWNER, ADMIN, MEMBER, VIEWER)';
-COMMENT ON COLUMN project_members.joined_at IS 'Data dołączenia do projektu';
+CREATE INDEX IF NOT EXISTS idx_project_members_project_id ON project_members(project_id);

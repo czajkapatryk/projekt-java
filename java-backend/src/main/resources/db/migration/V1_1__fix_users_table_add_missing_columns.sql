@@ -1,3 +1,0 @@
--- Migracja V1.1: Naprawa tabeli users (już wykonana w bazie)
--- Ta migracja została już wykonana wcześniej
--- Plik jest pusty, ponieważ zmiany zostały już zastosowane
