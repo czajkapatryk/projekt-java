@@ -25,7 +25,7 @@ export function Sidebar({ activeView, onViewChange, onCreateProject }: SidebarPr
   return (
     <aside
       className={cn(
-        "flex h-screen flex-col border-r border-border/50 bg-card/30 transition-all duration-300",
+        "flex h-full flex-col border-r border-border/50 bg-card/30 transition-all duration-300",
         isCollapsed ? "w-16" : "w-64",
       )}
     >
