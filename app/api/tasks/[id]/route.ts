@@ -100,13 +100,18 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     }
 
     // Otherwise, use PUT endpoint for full update
+    // Map dueDate to ensure it's passed correctly
+    const updateBody = {
+      ...body,
+      dueDate: body.dueDate || null,
+    }
     const response = await fetch(`${JAVA_BACKEND_URL}/api/v1/tasks/${id}`, {
       method: "PUT",
       headers: {
         "Authorization": authHeader,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(updateBody),
     })
 
     const data = await response.json()

@@ -62,10 +62,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     }
 
     const body = await request.json()
-    // Add projectId to the request body
+    // Add projectId to the request body and map dueDate to dueDate (Java expects camelCase)
     const taskRequest = {
       ...body,
       projectId: parseInt(id),
+      dueDate: body.dueDate || null, // Ensure dueDate is passed correctly
     }
 
     const response = await fetch(`${JAVA_BACKEND_URL}/api/v1/tasks`, {
