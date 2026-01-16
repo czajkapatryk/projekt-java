@@ -21,7 +21,7 @@ BEGIN
         -- Jeśli istnieje sekwencja, zapisz jej aktualną wartość i usuń zależności
         IF seq_name IS NOT NULL THEN
             -- Pobierz aktualną wartość sekwencji przed zmianą
-            EXECUTE format('SELECT setval(%L, (SELECT COALESCE(MAX(id), 1) FROM projects))', seq_name);
+            EXECUTE format('PERFORM setval(%L, (SELECT COALESCE(MAX(id), 1) FROM projects))', seq_name);
         END IF;
         
         -- Usuń domyślną wartość z kolumny (aby móc usunąć sekwencję)
@@ -40,6 +40,6 @@ BEGIN
         ALTER TABLE projects ALTER COLUMN id SET DEFAULT nextval('projects_id_seq');
         
         -- Ustaw aktualną wartość sekwencji
-        SELECT setval('projects_id_seq', (SELECT COALESCE(MAX(id), 1) FROM projects));
+        PERFORM setval('projects_id_seq', (SELECT COALESCE(MAX(id), 1) FROM projects));
     END IF;
 END $$;
