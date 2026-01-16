@@ -13,6 +13,7 @@ import { TasksView } from "@/components/tasks-view"
 import { ProjectDialog } from "@/components/project-dialog"
 import { TaskDialog } from "@/components/task-dialog"
 import { DeleteDialog } from "@/components/delete-dialog"
+import { Footer } from "@/components/footer"
 import { Loader2 } from "lucide-react"
 
 interface ProjectWithStats extends Project {
@@ -293,17 +294,18 @@ function AppContent() {
   }
 
   return (
-    <div className="flex h-screen bg-background">
-      <Sidebar
-        activeView={activeView}
-        onViewChange={(view) => {
-          setActiveView(view)
-          setSelectedProject(null)
-        }}
-        onCreateProject={handleCreateProject}
-      />
+    <div className="flex h-screen flex-col bg-background">
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar
+          activeView={activeView}
+          onViewChange={(view) => {
+            setActiveView(view)
+            setSelectedProject(null)
+          }}
+          onCreateProject={handleCreateProject}
+        />
 
-      <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-6">
         {isLoading ? (
           <div className="flex h-full items-center justify-center">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -336,7 +338,10 @@ function AppContent() {
             onDeleteTask={handleDeleteTask as any}
           />
         ) : null}
-      </main>
+        </main>
+      </div>
+
+      <Footer />
 
       <ProjectDialog
         open={projectDialogOpen}
