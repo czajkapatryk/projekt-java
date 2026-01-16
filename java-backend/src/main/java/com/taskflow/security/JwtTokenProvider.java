@@ -90,7 +90,19 @@ public class JwtTokenProvider {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
-        return Keys.hmacShaKeyFor(keyBytes);
+        try {
+            byte[] keyBytes;
+            if (jwtSecret.length() >= 32 && jwtSecret.length() <= 64 && !jwtSecret.contains("=")) {
+                keyBytes = jwtSecret.getBytes();
+            } else {
+                keyBytes = Decoders.BASE64.decode(jwtSecret);
+            }
+            if (keyBytes.length < 32) {
+                throw new IllegalArgumentException("JWT secret must be at least 32 bytes long");
+            }
+            return Keys.hmacShaKeyFor(keyBytes);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid JWT secret format. Use either a Base64-encoded string or a plain string (min 32 chars)", e);
+        }
     }
 }
