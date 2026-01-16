@@ -9,10 +9,6 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Testy jednostkowe dla encji Task.
- * Testuje metody biznesowe encji.
- */
 class TaskTest {
 
     private Task task;

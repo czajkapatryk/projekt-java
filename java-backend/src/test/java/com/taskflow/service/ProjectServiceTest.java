@@ -24,10 +24,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Testy jednostkowe dla ProjectService.
- * Testuje logikę biznesową zarządzania projektami.
- */
 @ExtendWith(MockitoExtension.class)
 class ProjectServiceTest {
 

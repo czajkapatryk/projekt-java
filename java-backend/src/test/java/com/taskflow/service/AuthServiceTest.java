@@ -31,10 +31,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-/**
- * Testy jednostkowe dla AuthService.
- * Testuje logikę autentykacji i rejestracji.
- */
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
 

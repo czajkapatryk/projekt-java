@@ -7,10 +7,7 @@ import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Testy jednostkowe dla encji User.
- * Testuje metody encji użytkownika.
- */
+
 class UserTest {
 
     @Test
