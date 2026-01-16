@@ -188,6 +188,14 @@ class ApiClient {
     if (!response.ok) throw new Error("Błąd usuwania zadania")
   }
 
+  async getUsers(): Promise<User[]> {
+    const response = await fetch("/api/users", {
+      headers: this.getHeaders(),
+    })
+    if (!response.ok) throw new Error("Błąd pobierania użytkowników")
+    return response.json()
+  }
+
   async getStats(): Promise<{
     projects: number
     totalTasks: number

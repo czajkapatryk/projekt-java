@@ -33,6 +33,7 @@ function AppContent() {
   const [allTasks, setAllTasks] = useState<TaskWithProject[]>([])
   const [selectedProject, setSelectedProject] = useState<ProjectWithStats | null>(null)
   const [projectTasks, setProjectTasks] = useState<TaskWithProject[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   // Dialog states
@@ -63,7 +64,11 @@ function AppContent() {
   const fetchData = async () => {
     setIsLoading(true)
     try {
-      const projectsRes = await api.getProjects()
+      const [projectsRes, usersRes] = await Promise.all([
+        api.getProjects(),
+        api.getUsers(),
+      ])
+      setUsers(usersRes)
 
       // Fetch tasks for each project to calculate stats
       const projectsWithStats: ProjectWithStats[] = await Promise.all(
@@ -258,7 +263,7 @@ function AppContent() {
           <ProjectView
             project={selectedProject as any}
             tasks={projectTasks as any}
-            users={[]}
+            users={users}
             onBack={() => setSelectedProject(null)}
             onCreateTask={handleCreateTask}
             onEditTask={handleEditTask as any}
@@ -290,7 +295,7 @@ function AppContent() {
         onOpenChange={setTaskDialogOpen}
         task={editingTask as any}
         projectId={selectedProject?.id || editingTask?.project.id || ""}
-        users={[]}
+        users={users}
         onSave={handleSaveTask as any}
       />
 
