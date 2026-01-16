@@ -86,16 +86,22 @@ class AuthServiceTest {
             saved.setCreatedAt(LocalDateTime.now());
             return saved;
         });
+        when(jwtTokenProvider.generateToken(anyString())).thenReturn("jwt.token.here");
+        when(jwtTokenProvider.getExpirationTime()).thenReturn(86400L);
 
         // When
-        UserResponse result = authService.register(request);
+        AuthResponse result = authService.register(request);
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.getEmail()).isEqualTo("newuser@example.com");
-        assertThat(result.getFirstName()).isEqualTo("Anna");
-        assertThat(result.getLastName()).isEqualTo("Nowak");
+        assertThat(result.getAccessToken()).isEqualTo("jwt.token.here");
+        assertThat(result.getTokenType()).isEqualTo("Bearer");
+        assertThat(result.getUser()).isNotNull();
+        assertThat(result.getUser().getEmail()).isEqualTo("newuser@example.com");
+        assertThat(result.getUser().getFirstName()).isEqualTo("Anna");
+        assertThat(result.getUser().getLastName()).isEqualTo("Nowak");
         verify(userRepository, times(1)).save(any(User.class));
+        verify(jwtTokenProvider, times(1)).generateToken("newuser@example.com");
     }
 
     @Test

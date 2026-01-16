@@ -2,12 +2,12 @@
 -- Data: 2024-01-15
 -- Opis: Wprowadza przykładowe dane do celów testowych
 
--- Hasło: Test123! (zahashowane BCrypt)
+-- Hasło: Test123! (zahashowane BCrypt) - 60 znaków
 INSERT INTO users (email, password_hash, first_name, last_name, role) VALUES
-('admin@taskflow.pl', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H9f1D2B6slHxU6Z1D6q1JZl1Gxe', 'Admin', 'Systemowy', 'ADMIN'),
-('jan.kowalski@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H9f1D2B6slHxU6Z1D6q1JZl1Gxe', 'Jan', 'Kowalski', 'USER'),
-('anna.nowak@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H9f1D2B6slHxU6Z1D6q1JZl1Gxe', 'Anna', 'Nowak', 'USER'),
-('piotr.wisniewski@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mrq4H9f1D2B6slHxU6Z1D6q1JZl1Gxe', 'Piotr', 'Wiśniewski', 'USER')
+('admin@taskflow.pl', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.QbV3/n3.C3S3OyqRmK', 'Admin', 'Systemowy', 'ADMIN'),
+('jan.kowalski@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.QbV3/n3.C3S3OyqRmK', 'Jan', 'Kowalski', 'USER'),
+('anna.nowak@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.QbV3/n3.C3S3OyqRmK', 'Anna', 'Nowak', 'USER'),
+('piotr.wisniewski@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZRGdjGj/n3.QbV3/n3.C3S3OyqRmK', 'Piotr', 'Wiśniewski', 'USER')
 ON CONFLICT (email) DO NOTHING;
 
 -- Projekty demonstracyjne
