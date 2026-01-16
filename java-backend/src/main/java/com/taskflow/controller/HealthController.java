@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.Map;
 
-/**
- * Kontroler do sprawdzania stanu zdrowia aplikacji.
- */
+
 @RestController
 @RequestMapping("/api/v1")
 public class HealthController {

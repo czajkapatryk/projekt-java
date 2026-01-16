@@ -11,6 +11,5 @@ CREATE TABLE IF NOT EXISTS projects (
         REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Indeksy
 CREATE INDEX IF NOT EXISTS idx_projects_owner_id ON projects(owner_id);
 CREATE INDEX IF NOT EXISTS idx_projects_name ON projects(name);

@@ -9,9 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Encja reprezentująca użytkownika systemu.
- */
 @Entity
 @Table(name = "users")
 @Data
@@ -57,10 +54,6 @@ public class User {
     @Builder.Default
     private List<Task> assignedTasks = new ArrayList<>();
 
-    /**
-     * Zwraca pełne imię i nazwisko użytkownika.
-     * @return String zawierający imię i nazwisko
-     */
     public String getFullName() {
         return firstName + " " + lastName;
     }

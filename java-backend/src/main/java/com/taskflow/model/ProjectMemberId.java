@@ -4,9 +4,6 @@ import lombok.*;
 
 import java.io.Serializable;
 
-/**
- * Klasa reprezentująca złożony klucz główny dla ProjectMember.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

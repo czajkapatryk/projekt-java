@@ -6,9 +6,6 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
-/**
- * Encja reprezentująca członkostwo użytkownika w projekcie.
- */
 @Entity
 @Table(name = "project_members")
 @Data

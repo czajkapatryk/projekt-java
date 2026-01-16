@@ -13,9 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Serwis do zarządzania projektami.
- */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -24,33 +21,16 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserService userService;
 
-    /**
-     * Pobiera projekty użytkownika.
-     * @param userId ID użytkownika
-     * @param pageable Parametry stronicowania
-     * @return Strona projektów
-     */
     public Page<ProjectResponse> getProjectsByUser(Long userId, Pageable pageable) {
         return projectRepository.findAllByUserId(userId, pageable)
                 .map(ProjectResponse::fromEntity);
     }
 
-    /**
-     * Pobiera projekt po ID.
-     * @param id ID projektu
-     * @return Dane projektu
-     */
     public ProjectResponse getProjectById(Long id) {
         Project project = findProjectById(id);
         return ProjectResponse.fromEntity(project);
     }
 
-    /**
-     * Tworzy nowy projekt.
-     * @param request Dane projektu
-     * @param ownerId ID właściciela
-     * @return Utworzony projekt
-     */
     @Transactional
     public ProjectResponse createProject(ProjectRequest request, Long ownerId) {
         User owner = userService.getUserEntityById(ownerId);
@@ -65,13 +45,6 @@ public class ProjectService {
         return ProjectResponse.fromEntity(savedProject);
     }
 
-    /**
-     * Aktualizuje projekt.
-     * @param id ID projektu
-     * @param request Nowe dane projektu
-     * @param userId ID użytkownika wykonującego operację
-     * @return Zaktualizowany projekt
-     */
     @Transactional
     public ProjectResponse updateProject(Long id, ProjectRequest request, Long userId) {
         Project project = findProjectById(id);
@@ -84,11 +57,6 @@ public class ProjectService {
         return ProjectResponse.fromEntity(updatedProject);
     }
 
-    /**
-     * Usuwa projekt.
-     * @param id ID projektu
-     * @param userId ID użytkownika wykonującego operację
-     */
     @Transactional
     public void deleteProject(Long id, Long userId) {
         Project project = findProjectById(id);
@@ -96,11 +64,6 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
-    /**
-     * Pobiera encję projektu po ID (do użytku wewnętrznego).
-     * @param id ID projektu
-     * @return Encja projektu
-     */
     public Project getProjectEntityById(Long id) {
         return findProjectById(id);
     }
@@ -116,11 +79,6 @@ public class ProjectService {
         }
     }
 
-    /**
-     * Pobiera liczbę projektów użytkownika.
-     * @param userId ID użytkownika
-     * @return Liczba projektów
-     */
     public long getProjectsCountByUser(Long userId) {
         return projectRepository.countByOwnerId(userId);
     }

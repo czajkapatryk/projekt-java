@@ -10,34 +10,16 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Repozytorium dla encji Project.
- */
+
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    /**
-     * Znajduje wszystkie projekty użytkownika (jako właściciel lub członek).
-     * @param userId ID użytkownika
-     * @param pageable Parametry stronicowania
-     * @return Strona projektów
-     */
     @Query("SELECT DISTINCT p FROM Project p " +
            "LEFT JOIN p.members m " +
            "WHERE p.owner.id = :userId OR m.user.id = :userId")
     Page<Project> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
 
-    /**
-     * Znajduje projekty należące do użytkownika.
-     * @param ownerId ID właściciela
-     * @return Lista projektów
-     */
     List<Project> findByOwnerId(Long ownerId);
 
-    /**
-     * Zlicza projekty użytkownika.
-     * @param ownerId ID właściciela
-     * @return Liczba projektów
-     */
     long countByOwnerId(Long ownerId);
 }
