@@ -8,10 +8,16 @@ import { CheckSquare, Calendar, FolderKanban, MoreVertical, Edit, Trash2 } from 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 
+interface TaskWithProject extends Task {
+  project: { id: string; name: string }
+  dueDate?: string | null
+  overdue?: boolean
+}
+
 interface TasksViewProps {
-  tasks: Task[]
-  onEditTask: (task: Task) => void
-  onDeleteTask: (task: Task) => void
+  tasks: TaskWithProject[]
+  onEditTask: (task: TaskWithProject) => void
+  onDeleteTask: (task: TaskWithProject) => void
 }
 
 const statusColors = {
