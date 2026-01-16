@@ -20,8 +20,8 @@ BEGIN
         
         -- Jeśli istnieje sekwencja, zapisz jej aktualną wartość i usuń zależności
         IF seq_name IS NOT NULL THEN
-            -- Pobierz aktualną wartość sekwencji przed zmianą
-            EXECUTE format('PERFORM setval(%L, (SELECT COALESCE(MAX(id), 1) FROM projects))', seq_name);
+            -- Pobierz aktualną wartość sekwencji przed zmianą (w EXECUTE używamy SELECT)
+            EXECUTE format('SELECT setval(%L, (SELECT COALESCE(MAX(id), 1) FROM projects))', seq_name);
         END IF;
         
         -- Usuń domyślną wartość z kolumny (aby móc usunąć sekwencję)
