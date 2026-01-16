@@ -92,7 +92,7 @@ public class TaskService {
                 .dueDate(request.getDueDate())
                 .build();
 
-        if (request.getAssigneeId() != null) {
+        if (request.getAssigneeId() != null && request.getAssigneeId() > 0) {
             User assignee = userService.getUserEntityById(request.getAssigneeId());
             task.setAssignee(assignee);
         }
@@ -116,7 +116,7 @@ public class TaskService {
         task.setPriority(request.getPriority() != null ? request.getPriority() : task.getPriority());
         task.setDueDate(request.getDueDate());
 
-        if (request.getAssigneeId() != null) {
+        if (request.getAssigneeId() != null && request.getAssigneeId() > 0) {
             User assignee = userService.getUserEntityById(request.getAssigneeId());
             task.setAssignee(assignee);
         } else {
