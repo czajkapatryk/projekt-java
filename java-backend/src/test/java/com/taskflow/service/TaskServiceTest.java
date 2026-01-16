@@ -25,10 +25,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * Testy jednostkowe dla TaskService.
- * Testuje logikę biznesową zarządzania zadaniami.
- */
 @ExtendWith(MockitoExtension.class)
 class TaskServiceTest {
 

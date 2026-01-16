@@ -11,9 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Encja reprezentująca projekt w systemie.
- */
 @Entity
 @Table(name = "projects")
 @Data
@@ -52,29 +49,16 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    /**
-     * Dodaje zadanie do projektu.
-     * @param task Zadanie do dodania
-     */
     public void addTask(Task task) {
         tasks.add(task);
         task.setProject(this);
     }
 
-    /**
-     * Usuwa zadanie z projektu.
-     * @param task Zadanie do usunięcia
-     */
     public void removeTask(Task task) {
         tasks.remove(task);
         task.setProject(null);
     }
 
-    /**
-     * Dodaje członka do projektu.
-     * @param user Użytkownik do dodania
-     * @param role Rola w projekcie
-     */
     public void addMember(User user, ProjectRole role) {
         ProjectMember member = ProjectMember.builder()
                 .project(this)

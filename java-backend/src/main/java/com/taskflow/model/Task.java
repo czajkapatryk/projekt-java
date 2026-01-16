@@ -8,9 +8,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * Encja reprezentująca zadanie w projekcie.
- */
 @Entity
 @Table(name = "tasks")
 @Data

@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-/**
- * Komponent do generowania i walidacji tokenów JWT.
- */
 @Component
 public class JwtTokenProvider {
 
@@ -23,21 +20,11 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private Long jwtExpiration;
 
-    /**
-     * Generuje token JWT dla uwierzytelnionego użytkownika.
-     * @param authentication Obiekt Authentication
-     * @return Token JWT
-     */
     public String generateToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return generateToken(userDetails.getUsername());
     }
 
-    /**
-     * Generuje token JWT dla użytkownika na podstawie emaila.
-     * @param email Email użytkownika
-     * @return Token JWT
-     */
     public String generateToken(String email) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
@@ -50,11 +37,6 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /**
-     * Wyciąga nazwę użytkownika z tokena JWT.
-     * @param token Token JWT
-     * @return Nazwa użytkownika (email)
-     */
     public String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -64,11 +46,6 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    /**
-     * Waliduje token JWT.
-     * @param token Token do walidacji
-     * @return true jeśli token jest prawidłowy
-     */
     public boolean validateToken(String token) {
         try {
             Jwts.parser()
@@ -81,10 +58,6 @@ public class JwtTokenProvider {
         }
     }
 
-    /**
-     * Zwraca czas wygaśnięcia tokena w sekundach.
-     * @return Czas wygaśnięcia
-     */
     public Long getExpirationTime() {
         return jwtExpiration / 1000;
     }

@@ -15,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Serwis do zarządzania zadaniami.
- */
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -27,59 +24,30 @@ public class TaskService {
     private final ProjectService projectService;
     private final UserService userService;
 
-    /**
-     * Pobiera zadania z filtrami.
-     * @param projectId ID projektu (opcjonalne)
-     * @param status Status (opcjonalny)
-     * @param priority Priorytet (opcjonalny)
-     * @param assigneeId ID przypisanego użytkownika (opcjonalne)
-     * @param pageable Parametry stronicowania
-     * @return Strona zadań
-     */
-    public Page<TaskResponse> getTasks(Long projectId, TaskStatus status, 
+    public Page<TaskResponse> getTasks(Long projectId, TaskStatus status,
                                         TaskPriority priority, Long assigneeId, 
                                         Pageable pageable) {
         return taskRepository.findWithFilters(projectId, status, priority, assigneeId, pageable)
                 .map(TaskResponse::fromEntity);
     }
 
-    /**
-     * Pobiera zadanie po ID.
-     * @param id ID zadania
-     * @return Dane zadania
-     */
     public TaskResponse getTaskById(Long id) {
         Task task = findTaskById(id);
         return TaskResponse.fromEntity(task);
     }
 
-    /**
-     * Pobiera zadania w projekcie.
-     * @param projectId ID projektu
-     * @return Lista zadań
-     */
     public List<TaskResponse> getTasksByProject(Long projectId) {
         return taskRepository.findByProjectId(projectId).stream()
                 .map(TaskResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Pobiera zadania przypisane do użytkownika.
-     * @param userId ID użytkownika
-     * @return Lista zadań
-     */
     public List<TaskResponse> getTasksByAssignee(Long userId) {
         return taskRepository.findByAssigneeId(userId).stream()
                 .map(TaskResponse::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Tworzy nowe zadanie.
-     * @param request Dane zadania
-     * @return Utworzone zadanie
-     */
     @Transactional
     public TaskResponse createTask(TaskRequest request) {
         Project project = projectService.getProjectEntityById(request.getProjectId());
@@ -101,12 +69,6 @@ public class TaskService {
         return TaskResponse.fromEntity(savedTask);
     }
 
-    /**
-     * Aktualizuje zadanie.
-     * @param id ID zadania
-     * @param request Nowe dane zadania
-     * @return Zaktualizowane zadanie
-     */
     @Transactional
     public TaskResponse updateTask(Long id, TaskRequest request) {
         Task task = findTaskById(id);
@@ -127,12 +89,6 @@ public class TaskService {
         return TaskResponse.fromEntity(updatedTask);
     }
 
-    /**
-     * Aktualizuje status zadania.
-     * @param id ID zadania
-     * @param request Nowy status
-     * @return Zaktualizowane zadanie
-     */
     @Transactional
     public TaskResponse updateTaskStatus(Long id, TaskStatusRequest request) {
         Task task = findTaskById(id);
@@ -141,10 +97,6 @@ public class TaskService {
         return TaskResponse.fromEntity(updatedTask);
     }
 
-    /**
-     * Usuwa zadanie.
-     * @param id ID zadania
-     */
     @Transactional
     public void deleteTask(Long id) {
         Task task = findTaskById(id);
@@ -156,21 +108,10 @@ public class TaskService {
                 .orElseThrow(() -> new ResourceNotFoundException("Zadanie", "id", id));
     }
 
-    /**
-     * Pobiera całkowitą liczbę zadań użytkownika (we wszystkich jego projektach).
-     * @param userId ID użytkownika
-     * @return Liczba zadań
-     */
     public long getTotalTasksCountByUser(Long userId) {
         return taskRepository.countByProjectOwnerId(userId);
     }
 
-    /**
-     * Pobiera liczbę zadań użytkownika o określonym statusie.
-     * @param userId ID użytkownika
-     * @param status Status zadań
-     * @return Liczba zadań
-     */
     public long getTasksCountByStatusAndUser(Long userId, TaskStatus status) {
         return taskRepository.countByProjectOwnerIdAndStatus(userId, status);
     }

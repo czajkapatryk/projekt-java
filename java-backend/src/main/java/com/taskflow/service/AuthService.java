@@ -18,9 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Serwis do obsługi autentykacji i rejestracji.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,11 +28,6 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
 
-    /**
-     * Rejestruje nowego użytkownika i zwraca token autoryzacyjny.
-     * @param request Dane rejestracji
-     * @return Token i dane użytkownika
-     */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -61,11 +53,6 @@ public class AuthService {
                 .build();
     }
 
-    /**
-     * Loguje użytkownika.
-     * @param request Dane logowania
-     * @return Token i dane użytkownika
-     */
     public AuthResponse login(LoginRequest request) {
         try {
             Authentication authentication = authenticationManager.authenticate(
